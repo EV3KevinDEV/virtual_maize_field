@@ -1,4 +1,4 @@
-# Virtual Maize Field
+# Virtual Avocado Orchard (Fork of Virtual Maize Field)
 
 <p float="left" align="middle">
   <img src="misc/FRE-logo.png" width="250">
@@ -15,10 +15,10 @@
   <a href="https://www.gnu.org/licenses/gpl-3.0"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"/></a>
 </p>
 <p align="middle">
-  This is a package to procedurally generate randomized fields with rows of plants for Gazebo.
+  This fork generates randomized orchard-style worlds for Gazebo, refactored from maize rows to avocado-tree rows.
 </p>
 
-![Screenshot of a generated map with maize plants](./misc/screenshot_v5.0_ign.png)
+![Screenshot of a generated map with crop rows](./misc/screenshot_v5.0_ign.png)
 
 ROS Distro | Gazebo version | Branch | Build status
 :---------: | :----: | :----: | :----------: 
@@ -29,18 +29,25 @@ ROS Distro | Gazebo version | Branch | Build status
 **Humble** | **Gazebo Classic** | [`ros2`](https://github.com/FieldRobotEvent/virtual_maize_field/tree/ros2) | [![ros-humble](https://github.com/FieldRobotEvent/virtual_maize_field/actions/workflows/ros-humble-test.yaml/badge.svg?branch=ros2)](https://github.com/FieldRobotEvent/virtual_maize_field/actions/workflows/ros-humble-test.yaml)
 **Noetic** | **Gazebo Classic** | [`main`](https://github.com/FieldRobotEvent/virtual_maize_field/tree/main) | [![ros-noetic](https://github.com/FieldRobotEvent/virtual_maize_field/actions/workflows/ros-noetic-test.yaml/badge.svg?branch=main)](https://github.com/FieldRobotEvent/virtual_maize_field/actions/workflows/ros-noetic-test.yaml?branch=main)
 
+## Fork Focus: Avocado Refactor
+- Package/API compatibility is kept (`virtual_maize_field` package name and CLI commands are unchanged).
+- Crop visuals and spacing are being refactored for avocado orchard simulation.
+- Legacy FRE competition configs remain available for regression testing and compatibility.
+- A large orchard preset for aerial inspection is included: `drone_inspection_large`.
+
 
 ## Installation
-Clone this repository and build the workspace. Additional you'll need the following packages:
+Clone this repository and build the workspace. Install package dependencies with:
 
 ```commandline
-rosdep install virtual_maize_field
+rosdep update
+rosdep install --from-paths . --ignore-src -r -y
 ```
 
 This package has been tested on ROS 2 Humble, Jazzy and Rolling.
 
-## Generating new maize field worlds
-This package includes a script (`virtual_maize_field/generate_world.py`) that can generate randomized agricultural worlds. All parameters are optional and have default values. All comma separated arguments can be scaler as well. 
+## Generating orchard worlds
+This package includes a script (`virtual_maize_field/generate_world.py`) that generates randomized orchard worlds. All parameters are optional and have default values. All comma-separated arguments can be scalar as well.
 
 You can call the script using
 ```bash
@@ -48,7 +55,14 @@ ros2 run virtual_maize_field generate_world
 ```
 The resulting file will be placed in `$ROS_HOME/virtual_maize_field/generated.world`. 
 
-You can use this script by one of the defined config files or specifying the parameters below:
+You can use this script with one of the predefined config files or by specifying the parameters below:
+
+### Avocado model mapping
+For backward compatibility, crop keys are still `maize_01` and `maize_02` in the generator.
+
+- If you replaced meshes in `models/maize_01/` and `models/maize_02/`, no code changes are needed.
+- If you added new avocado model folders, update crop keys in `virtual_maize_field/world_generator/models.py` and set `crop_types` in your YAML config.
+
 <details>
   <summary>Click to show all possible arguments</summary>
   
@@ -92,12 +106,12 @@ You can use this script by one of the defined config files or specifying the par
                       [--location_markers LOCATION_MARKERS]
                       [--load_from_file LOAD_FROM_FILE] [--seed SEED]
                       [--show_map]
-                      [{fre21_task_2_mini,fre21_task_2_fast,fre21_task_1_mini,fre22_task_mapping_mini,fre22_task_navigation,fre21_task_3_fast,fre22_task_mapping,fre21_task_4_fast,fre21_task_2,fre21_task_3_mini,fre22_task_mapping_fast,fre21_task_1,fre21_task_3,fre22_task_navigation_fast,fre21_task_1_fast,fre21_task_4,fre22_task_navigation_mini,fre21_task_4_mini}]
+                      [{drone_inspection_large,fre21_task_2_mini,fre21_task_2_fast,fre21_task_1_mini,fre22_task_mapping_mini,fre22_task_navigation,fre21_task_3_fast,fre22_task_mapping,fre21_task_4_fast,fre21_task_2,fre21_task_3_mini,fre22_task_mapping_fast,fre21_task_1,fre21_task_3,fre22_task_navigation_fast,fre21_task_1_fast,fre21_task_4,fre22_task_navigation_mini,fre21_task_4_mini}]
 
-Generate a virtual maize field world for Gazebo.
+Generate a virtual orchard world for Gazebo.
 
 positional arguments:
-  {fre21_task_2_mini,fre21_task_2_fast,fre21_task_1_mini,fre22_task_mapping_mini,fre22_task_navigation,fre21_task_3_fast,fre22_task_mapping,fre21_task_4_fast,fre21_task_2,fre21_task_3_mini,fre22_task_mapping_fast,fre21_task_1,fre21_task_3,fre22_task_navigation_fast,fre21_task_1_fast,fre21_task_4,fre22_task_navigation_mini,fre21_task_4_mini}
+  {drone_inspection_large,fre21_task_2_mini,fre21_task_2_fast,fre21_task_1_mini,fre22_task_mapping_mini,fre22_task_navigation,fre21_task_3_fast,fre22_task_mapping,fre21_task_4_fast,fre21_task_2,fre21_task_3_mini,fre22_task_mapping_fast,fre21_task_1,fre21_task_3,fre22_task_navigation_fast,fre21_task_1_fast,fre21_task_4,fre22_task_navigation_mini,fre21_task_4_mini}
                         Config file name in the config folder
 
 optional arguments:
@@ -165,7 +179,7 @@ optional arguments:
   --hole_size_max [HOLE_SIZE_MAX [HOLE_SIZE_MAX ...]]
                         default_value: [7, 5, 5, 3, 0, 0]
   --crop_types [CROP_TYPES [CROP_TYPES ...]]
-                        default_value: ['maize_01', 'maize_02']
+                        default_value: ['maize_01', 'maize_02']  # legacy model keys (can point to avocado assets in this fork)
   --litters LITTERS     default_value: 0
   --litter_types [LITTER_TYPES [LITTER_TYPES ...]]
                         default_value: ['ale', 'beer', 'coke_can',
@@ -185,15 +199,20 @@ optional arguments:
 </details>
 
 ## Sample Worlds
-In the [config folder](config/), config files to generate sample worlds are located. The parameters are chosen to match [the task description](https://www.fieldrobot.com/event/index.php/contest/)
+The [config folder](config/) includes orchard-oriented presets for this fork and legacy FRE task presets from upstream.
 
-Worlds for the Field Robot Event 2022:
+Orchard presets (this fork):
+| Name | Description |
+|:---- |:----------- |
+| *drone_inspection_large* | Large-scale avocado orchard layout for aerial inspection. Uses wide rows, larger headland, lower terrain noise, and deterministic seed for repeatable experiments. |
+
+Legacy worlds for Field Robot Event 2022:
 | Name | Description |
 |:---- |:----------- |
 | *fre22_task_navigation* | Task navigation, curved rows that get more difficult (eg. have more and larger holes) to the left |
 | *fre22_task_mapping* | Task mapping, field with random holes, bottles and weeds spread throughout the field. The cans, bottles and weeds have no collision box and are static. <br /><sub>This world needs dandelion models which were only distributed among competitors of the Field Robot Event 2022. They are not uploaded to Github because they cannot be open-sourced. If you don't have access to these models, check out the `fre21_task_3` worlds.</sub>|
 
-Worlds for the Field Robot Event 2021:
+Legacy worlds for Field Robot Event 2021:
 | Name | Description |
 |:---- |:----------- |
 | *fre21_task_1* | Task 1, curved rows without holes |
@@ -203,11 +222,22 @@ Worlds for the Field Robot Event 2021:
 
 You can use these config files when generating worlds, e.g.:
 ```commandline
-ros2 run virtual_maize_field generate_world fre22_task_navigation_mini
+ros2 run virtual_maize_field generate_world drone_inspection_large
 ```
 
 ## Launching and using generated worlds
-The launch file to launch the worlds is called `simulation.launch`. You can launch the launch file by running `ros2 launch virtual_maize_field simulation.launch.py`. By default the launch file will launch `generated_world.world`. You can launch any world by using the `world_name` arg. e.g. `ros2 launch virtual_maize_field simulation.launch.py world_name:=simple_row_level_1.world`. The generated world will be saved in `$ROS_HOME/virtual_maize_field` (usually, this will be `~/.ros/virtual_maize_field`).
+The launch file to launch the worlds is called `simulation.launch`. You can launch the launch file by running `ros2 launch virtual_maize_field simulation.launch.py`. By default the launch file will launch `generated.world`. You can launch any world by using the `world_name` arg. e.g. `ros2 launch virtual_maize_field simulation.launch.py world_name:=simple_row_level_1.world`. The generated world will be saved in `$ROS_HOME/virtual_maize_field` (usually, this will be `~/.ros/virtual_maize_field`).
+
+Typical Gazebo (Ignition) workflow:
+```commandline
+ros2 run virtual_maize_field generate_world drone_inspection_large
+ros2 launch virtual_maize_field simulation.launch.py
+```
+
+For server-only mode (without rendering):
+```commandline
+ros2 launch virtual_maize_field simulation.launch.py headless:=True
+```
 
 To add your own robot in the world, use the generated `robot_spawner.launch.py`. This launches your robot at the correct position in the generated world. Your launch file to launch your robot should look like (replace `<<robot_name>>` with your robot name):
 
@@ -256,13 +286,13 @@ def read_markers_file() -> None:
 ```
 
 ## License
-Virtual Maize Field is copyright (C) 2021 *Farm Technology Group of Wageningen University & Research* and *Kamaro Engineering e.V.* and licensed under [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0).
+This fork is based on Virtual Maize Field, copyright (C) 2021 *Farm Technology Group of Wageningen University & Research* and *Kamaro Engineering e.V.*, and licensed under [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0).
 
 ### Models
 | Name | Path | Copyright | License |
 |:---- |:---- |:--------- |:------- |
-| [Maize 01](models/maize_01/model.config) | `models/maize_01/` | 2021 *Kamaro Engineering e.V.* | [![License: CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-sa/4.0/) |
-| [Maize 02](models/maize_02/model.config) | `models/maize_02/` | 2021 *Kamaro Engineering e.V.* | [![License: CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-sa/4.0/) |
+| [Avocado Tree Variant 01 (legacy key: maize_01)](models/maize_01/model.config) | `models/maize_01/` | 2021 *Kamaro Engineering e.V.* | [![License: CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-sa/4.0/) |
+| [Avocado Tree Variant 02 (legacy key: maize_02)](models/maize_02/model.config) | `models/maize_02/` | 2021 *Kamaro Engineering e.V.* | [![License: CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-sa/4.0/) |
 | [Stone 01](models/stone_01/model.config) | `models/stone_01/` | 2020 *Andrea Spognetta* | [![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc/4.0/) |
 | [Stone 02](models/stone_02/model.config) | `models/stone_02/` | 2014 *Sascha Henrichs* | [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/) |
 | [Ale](models/ale/model.config) | `models/ale/` | 2017 *elouisetrewartha* | [![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc/4.0/) |

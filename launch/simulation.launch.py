@@ -86,10 +86,9 @@ def generate_launch_description() -> LaunchDescription:
         verbose,
     )
 
-    environment = AppendEnvironmentVariable(
-        "GZ_SIM_RESOURCE_PATH",
-        path.join(get_package_share_directory("virtual_maize_field"), "models"),
-    )
+    model_path = path.join(get_package_share_directory("virtual_maize_field"), "models")
+    gz_environment = AppendEnvironmentVariable("GZ_SIM_RESOURCE_PATH", model_path)
+    ign_environment = AppendEnvironmentVariable("IGN_GAZEBO_RESOURCE_PATH", model_path)
 
     log_gz_args = LogInfo(msg=["Start Ignition Gazebo with gz_args: '", gz_args, "'"])
 
@@ -125,7 +124,8 @@ def generate_launch_description() -> LaunchDescription:
     ld.add_action(declare_world_name_cmd)
 
     # Append models to environment
-    ld.add_action(environment)
+    ld.add_action(gz_environment)
+    ld.add_action(ign_environment)
 
     # Add nodes
     ld.add_action(log_gz_args)

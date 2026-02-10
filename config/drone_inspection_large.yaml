@@ -1,0 +1,17 @@
+row_length: 64
+rows_count: 28
+row_width: 3
+row_segments:
+  - straight
+row_segment_straight_length_min: 8.0
+row_segment_straight_length_max: 18.0
+ground_resolution: 0.25
+ground_elevation_max: 0.03
+ground_headland: 8.0
+ground_ditch_depth: 0.1
+plant_spacing_min: 1.4
+plant_spacing_max: 2.2
+hole_prob: 0.0
+hole_size_max: 1
+location_markers: true
+seed: 2026
